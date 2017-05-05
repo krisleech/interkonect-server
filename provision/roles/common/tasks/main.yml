@@ -1,0 +1,15 @@
+---
+- name: Install Common build tools
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - build-essential
+    - git
+    - curl
+    - wget
+    - openssl
+    # - apache2-utils
+    # - libapache2-mod-xsendfile
+    # - libapr1-dev
+    # - libcurl4-openssl-dev
+    # - libexpat1
+    # - ssl-cert

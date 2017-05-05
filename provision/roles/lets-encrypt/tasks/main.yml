@@ -1,0 +1,18 @@
+---
+- name: Install LetsEncrypt
+  apt: name=letsencrypt state=installed
+
+# webroot path
+- name: "Create webroot path"
+  file:
+    path: /var/www/html/.well-known/acme-challenge
+    state: directory
+    mode: 0755
+
+# daily at midnight
+- name: Add cron job for certificate renewal
+  cron:
+    name: LetEncrypt cert renewal
+    job: "letsencrypt renew --quiet --email kris.leech@interkonect.com --agree-tos --post-hook 'service apache restart'"
+    minute: 0
+    hour: 0

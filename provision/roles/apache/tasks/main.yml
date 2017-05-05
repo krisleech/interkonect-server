@@ -1,0 +1,33 @@
+
+---
+- name: Install Apache and related packages
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - apache2
+    # - apache2-utils
+    # - libapache2-mod-xsendfile
+    # - libapr1-dev
+    # - libcurl4-openssl-dev
+    # - libexpat1
+    # - ssl-cert
+
+- name: Enable Apache modules
+  command: a2enmod {{ item }} creates=/etc/apache2/mods-enabled/{{ item }}.load
+  with_items:
+    - deflate
+    - expires
+    - headers
+    - rewrite
+    - ssl
+  notify: restart apache
+
+# - name: Create mod-ssl config and disable SSLv3
+#   template: src=ssl.conf.j2 dest=/etc/apache2/mods-available/ssl.conf
+#   notify: restart apache
+
+- name: Disable default Apache site
+  command: a2dissite 000-default removes=/etc/apache2/sites-enabled/000-default.conf
+  notify: reload apache
+
+- name: Ensure Apache is running and enabled
+  service: name=apache2 state=started enabled=yes

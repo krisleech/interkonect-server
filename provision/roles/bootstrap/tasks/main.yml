@@ -1,0 +1,35 @@
+---
+# Bootstraping uses the root user, it is the only time the root user is used.
+# We install Pythin which is required by Ansible and create an admin user which
+# can sudo without a password.
+#
+- name: Bootstrap Install of Python required for Ansible
+  remote_user: "{{ root_user }}"
+  raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal python-simplejson)
+
+- name: Create the admin group
+  remote_user: "{{ root_user }}"
+  group: name=admin state=present
+
+- name: Create the admin user (and add to admin group)
+  remote_user: "{{ root_user }}"
+  user: name={{ admin_user }} state=present shell=/bin/bash group=admin
+
+- name: Set up authorized_keys for the admin user
+  remote_user: "{{ root_user }}"
+  authorized_key: user={{ admin_user }} key="{{ item }}"
+  with_file:
+    - ../files/kris-leech.pub
+
+- name: Allow users in the admin group to sudo without a password
+  remote_user: "{{ root_user }}"
+  copy: src=passwordless_sudo dest='/etc/sudoers.d/passwordless_sudo' owner=root group=root mode=0440 validate='visudo -cf %s'
+
+- name: Create deploy user
+  user: name={{ deploy_user }} shell=/bin/bash
+
+- name: Set up authorized_keys for the deploy
+  authorized_key: user={{ deploy_user }}
+                  key="{{ item }}"
+  with_file:
+    - ../files/kris-leech.pub

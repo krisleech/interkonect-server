@@ -1,6 +1,7 @@
 # interkonect.com
 
-Ansible provisioning and deployment for my websites.
+Ansible provisioning and deployment for my websites with SSL certficates from
+[Lets Encrypt](https://letsencrypt.org).
 
 ## Installation
 
@@ -10,6 +11,8 @@ repository contains the hosts and playbooks for provisioning and deployment.
 ### Install Ansible
 
 Ansible 2.x or better is required.
+
+#### Ubuntu
 
 ```
 apt-add-repository ppa:ansible/ansible
@@ -47,5 +50,3 @@ Show facts for servers:
 ```
 ansible all -m setup
 ```
-
-

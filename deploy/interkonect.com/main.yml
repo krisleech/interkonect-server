@@ -1,0 +1,23 @@
+---
+- name: 'Deploy interkonect.com'
+  hosts: interkonect.com
+  remote_user: "{{ admin_user }}"
+  gather_facts: False
+  become: True
+  vars_files:
+    - ../../vars/defaults.yml
+  vars:
+    project: interkonect
+    domain: new.interkonect.com
+    # domain_aliases:
+    #   - www.interkonect.com
+    repo: https://github.com/krisleech/interkonect.com.git
+    branch: master
+    env: production
+    deploy_to: "/home/{{ deploy_user }}/apps/{{ project }}/{{ env }}"
+    document_root: "{{ deploy_to }}/public"
+    build_command: "hugo"
+  roles:
+    - role: ../roles/static-website
+    - role: ../roles/lets-encrypt
+

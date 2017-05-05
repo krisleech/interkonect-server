@@ -1,5 +1,3 @@
-# Vultr
-interkonect.com ansible_host=45.76.133.239 ansible_user=root
-
 # Digital Ocean
-teamcoding.com ansible_host=46.101.86.159 ansible_user=root
+# interkonect.com ansible_host=178.62.111.114 ansible_user=root
+interkonect.com ansible_host=178.62.111.114

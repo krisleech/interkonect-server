@@ -1,7 +1,0 @@
-- hosts: all
-  gather_facts: False
-
-  tasks:
-  - name: Bootstrap Install of Python required for Ansible
-    become: true
-    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal python-simplejson)

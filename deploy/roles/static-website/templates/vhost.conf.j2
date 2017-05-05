@@ -1,0 +1,43 @@
+<VirtualHost *:443>
+  ServerName {{ domain }}
+
+  {% if domain_aliases is defined %}
+  {% for alias in domain_aliases %}
+  ServerAlias {{ alias }}
+  {% endfor %}
+  {% endif %}
+
+  DocumentRoot {{ document_root }}
+
+  <Directory {{ document_root }}>
+    Require all granted
+    AllowOverride all
+  </Directory>
+
+  SSLEngine on
+
+  SSLCertificateFile /etc/letsencrypt/live/{{ domain }}/cert.pem
+  SSLCertificateKeyFile /etc/letsencrypt/live/{{ domain }}/privkey.pem
+  SSLCertificateChainFile /etc/letsencrypt/live/{{ domain }}/chain.pem
+
+  SSLVerifyClient None
+
+  Alias /.well-known/acme-challenge/ /var/www/html/.well-known/acme-challenge/
+  <Directory "/var/www/html/.well-known/acme-challenge/">
+      Options None
+      AllowOverride None
+      ForceType text/plain
+      RedirectMatch 404 "^(?!/\.well-known/acme-challenge/[\w-]{43}$)"
+  </Directory>
+
+  ErrorLog ${APACHE_LOG_DIR}/{{ domain }}-error.log
+  CustomLog ${APACHE_LOG_DIR}/{{ domain }}-access.log combined
+
+</VirtualHost>
+
+  # Redirect HTTP to HTTPS
+<VirtualHost *:80>
+  ServerName {{ domain }}
+  # RewriteRule  ^.well-known/  -  [L]
+  RedirectMatch permanent ^(.*)$ https://{{ domain }}$1
+</VirtualHost>

@@ -1,0 +1,31 @@
+---
+- name: Create Apache vhost for {{ domain }}
+  template: src=vhost.conf.j2 dest=/etc/apache2/sites-available/{{ domain }}.conf owner=root group=root
+  notify: reload apache
+
+- name: Create directories
+  become_user: "{{ deploy_user }}"
+  file:
+    path: "{{ deploy_to }}"
+    state: directory
+    mode: 0755
+
+- name: Clone project for {{ domain }}
+  become_user: "{{ deploy_user }}"
+  git:
+    repo: "{{ repo }}"
+    version: "{{ branch }}"
+    force: yes
+    accept_hostkey: yes
+    dest: "{{ deploy_to }}"
+    update: yes
+    ssh_opts: "-o StrictHostKeyChecking=no -o ForwardAgent=yes"
+
+- name: Build website for {{ domain }}
+  become_user: "{{ deploy_user }}"
+  command: "{{ build_command }}"
+  args:
+    chdir: "{{ deploy_to }}"
+
+- name: Enable site {{ domain }}
+  command: a2ensite {{ domain }}.conf

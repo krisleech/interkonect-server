@@ -1,6 +1,14 @@
 ---
-- hosts: interkonect.com
+- name: 'Provision interkonect.com'
+  hosts: interkonect.com
+  remote_user: "{{ admin_user }}"
   gather_facts: False
   become: True
+  vars_files:
+    - ../../vars/defaults.yml
   roles:
-    - role: ../roles/bootstrap.yml
+    - ../roles/bootstrap
+    - ../roles/common
+    - ../roles/apache
+    - ../roles/lets-encrypt
+    - ../roles/hugo

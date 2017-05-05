@@ -9,6 +9,7 @@
   roles:
     - ../roles/bootstrap
     - ../roles/common
+    - ../roles/firewall
     - ../roles/apache
     - ../roles/lets-encrypt
     - ../roles/hugo

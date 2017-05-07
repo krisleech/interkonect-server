@@ -16,7 +16,7 @@
     env: production
     deploy_to: "/home/{{ deploy_user }}/apps/{{ project }}/{{ env }}"
     document_root: "{{ deploy_to }}/public"
-    build_command: "hugo"
+    build_command: "hugo --baseURL https://{{ domain }}"
   roles:
     - role: ../roles/static-website
     - role: ../roles/lets-encrypt

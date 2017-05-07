@@ -1,6 +1,6 @@
 ---
 - name: Fetch certificate (using webroot authentication)
-  command: "letsencrypt --webroot --domain={{ domain}}{% if domain_aliases is defined %}{% for alias in domain_aliases %} --domain={{alias}}{% endfor %}{% endif %} --webroot-path /var/www/html --email kris.leech@interkonect.com --agree-tos certonly"
+  command: "letsencrypt --webroot --domain={{ domain}}{% if domain_aliases is defined %}{% for alias in domain_aliases %} --domain={{alias}}{% endfor %}{% endif %} --webroot-path /var/www/html --email {{ sysadmin_email }} --agree-tos certonly"
   args:
     creates: "/etc/letsencrypt/live/{{ domain }}"
   notify: restart apache

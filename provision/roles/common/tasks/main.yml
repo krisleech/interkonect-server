@@ -16,6 +16,13 @@
     # - ssl-cert
 
 # https://help.ubuntu.com/lts/serverguide/automatic-updates.html
+# https://debian-handbook.info/browse/stable/sect.regular-upgrades.html
 - name: Enable unattended upgrades
   template: src=apt_periodic.j2 dest=/etc/apt/apt.conf.d/10periodic
             mode=0644 owner=root group=root
+
+- name: Install Apticron
+  apt: pkg=apticron state=installed
+
+- name: Configure Apticron
+  template: src=apticron.conf.j2 dest=/etc/apticron/apticron.conf

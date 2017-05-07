@@ -7,9 +7,15 @@
     - curl
     - wget
     - openssl
+    - unattended-upgrades
     # - apache2-utils
     # - libapache2-mod-xsendfile
     # - libapr1-dev
     # - libcurl4-openssl-dev
     # - libexpat1
     # - ssl-cert
+
+# https://help.ubuntu.com/lts/serverguide/automatic-updates.html
+- name: Enable unattended upgrades
+  template: src=apt_periodic.j2 dest=/etc/apt/apt.conf.d/10periodic
+            mode=0644 owner=root group=root

@@ -1,4 +1,8 @@
 ---
-- name: Install Hugo
-  apt: name=hugo state=installed
+- name: Uninstall Hugo (old version)
+  apt: name=hugo state=absent
 
+- name: Install Hugo (new version)
+  command: snap install hugo
+  args:
+    creates: "/snap/bin/hugo"

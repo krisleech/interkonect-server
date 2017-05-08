@@ -1,5 +1,5 @@
 ---
-- name: 'Deploy interkonect.com'
+- name: 'Deploy interkonect website'
   hosts: interkonect.com
   remote_user: "{{ admin_user }}"
   gather_facts: False

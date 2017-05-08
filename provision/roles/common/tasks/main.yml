@@ -27,3 +27,16 @@
 
 - name: Configure Apticron
   template: src=apticron.conf.j2 dest=/etc/apticron/apticron.conf
+
+- name: Allow non-root login by public key only
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    line: "{{ item.line }}"
+    state: "{{ item.state }}"
+  with_items:
+    - { line: "PermitRootLogin yes", state: absent }
+    - { line: "PubkeyAuthentication no", state: absent }
+    - { line: "PasswordAuthentication yes", state: absent }
+    - { line: "PermitRootLogin no", state: present }
+    - { line: "PubkeyAuthentication yes", state: present }
+    - { line: "PasswordAuthentication no", state: present }

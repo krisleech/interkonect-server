@@ -10,6 +10,7 @@
     - ../roles/bootstrap
     - ../roles/common
     - ../roles/firewall
+    - ../roles/metrics
     - ../roles/apache
     - ../roles/lets-encrypt
     - ../roles/hugo

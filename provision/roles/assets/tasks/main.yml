@@ -1,0 +1,5 @@
+---
+- name: Install asset tools
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - graphicsmagick-imagemagick-compat

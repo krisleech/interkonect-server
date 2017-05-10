@@ -1,7 +1,6 @@
 ---
 - name: Create Apache vhost for {{ domain }}
   template: src=vhost.conf.j2 dest=/etc/apache2/sites-available/{{ domain }}.conf owner=root group=root
-  notify: reload apache
 
 - name: Create directories
   become_user: "{{ deploy_user }}"
@@ -23,9 +22,22 @@
 
 - name: Build website for {{ domain }}
   become_user: "{{ deploy_user }}"
-  command: "{{ build_command }}"
+  command: "{{ item }}"
   args:
     chdir: "{{ deploy_to }}"
+  with_items: "{{ build_commands }}"
+
+# FIXME: this is specific to interkonect, not all websites
+- name: Optimize JPEG images for {{ domain }}
+  become_user: "{{ deploy_user }}"
+  shell: "find -iname '*.jpg' | parallel convert {} -strip -resize 1366x768^ {.}.jpg"
+  args:
+    chdir: "{{ document_root }}"
+
+- name: Create Gzip content for {{ domain }}
+  become_user: "{{ deploy_user }}"
+  command: "find {{ document_root }} -type f \\( -name '*.html' -o -name '*.js' -o -name '*.css' \\) -exec gzip -v -k -f --best {} \\;"
 
 - name: Enable site {{ domain }}
   command: a2ensite {{ domain }}.conf
+  notify: reload apache

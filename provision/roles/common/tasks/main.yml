@@ -2,6 +2,7 @@
 - name: Install Common build tools
   apt: pkg={{ item }} state=installed
   with_items:
+    - parallel
     - apt-transport-https
     - build-essential
     - git
@@ -9,12 +10,6 @@
     - wget
     - openssl
     - unattended-upgrades
-    # - apache2-utils
-    # - libapache2-mod-xsendfile
-    # - libapr1-dev
-    # - libcurl4-openssl-dev
-    # - libexpat1
-    # - ssl-cert
 
 # https://help.ubuntu.com/lts/serverguide/automatic-updates.html
 # https://debian-handbook.info/browse/stable/sect.regular-upgrades.html

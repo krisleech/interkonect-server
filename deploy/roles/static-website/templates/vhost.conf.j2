@@ -32,7 +32,31 @@
 
   ErrorLog ${APACHE_LOG_DIR}/{{ domain }}-error.log
   CustomLog ${APACHE_LOG_DIR}/{{ domain }}-access.log combined
+  AddEncoding gzip .gz
 
+  # Use precompliled gzip CSS and JS files if supported by browser
+  <LocationMatch "^/assets/.*\.(css|js)$">
+    RewriteEngine on
+    RewriteCond %{HTTP:Accept-Encoding} \b(x-)?gzip\b
+    RewriteCond %{REQUEST_FILENAME}.gz -s
+    RewriteRule ^(.+)$ $1.gz
+  </LocationMatch>
+
+  # for {.css.gz, .js.gz} turn off mod_deflate (on-the-fly) compression
+  # and set correct headers to indicate encoding
+  <LocationMatch "^/assets/.*\.css\.gz$">
+      SetEnv no-gzip 1
+      ForceType text/css
+      Header set Content-Encoding gzip
+      Header add Vary Accept-Encoding
+  </LocationMatch>
+
+  <LocationMatch "^/assets/.*\.js\.gz$">
+      SetEnv no-gzip 1
+      ForceType application/javascript
+      Header set Content-Encoding gzip
+      Header add Vary Accept-Encoding
+  </LocationMatch>
 </VirtualHost>
 
   # Redirect HTTP to HTTPS
